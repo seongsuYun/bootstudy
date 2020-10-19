@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.goods.GoodsMapper">
+
+	<!-- 상품고유번호 조회 -->
+	<select id="getGoodsSeq" resultType="int">
+	<![CDATA[
+		SELECT NVL(MAX(GOODS_SEQ), 1) AS GOODS_SEQ FROM T_GOODS
+	]]>
+	</select>
+
+	<!-- 상품저장 -->
+	<insert id="addGoods" parameterType="map">
+	<![CDATA[
+		INSERT INTO T_GOODS(
+		    GOODS_SEQ, EMAIL, GOODS_NAME, CONTENTS, ENTER_DATE
+		) VALUES(
+		    #{goodsSeq}, #{email}, #{goodsName}, #{contents}, SYSDATE
+		)
+	]]>
+	</insert>
+
+	<!-- 상품이미지 고유번호 조회 -->
+	<select id="getGoodsFileSeq" resultType="int">
+	<![CDATA[
+		SELECT NVL(MAX(IMG_SEQ), 1) AS IMG_SEQ FROM T_GOODS_FILE
+	]]>
+	</select>
+
+	<!-- 상품이미지 저장 -->
+	<insert id="addGoodsFile" parameterType="map">
+	<![CDATA[
+		INSERT INTO T_GOODS_FILE(
+		    IMG_SEQ, GOODS_SEQ, IMG_NAME, ENTER_DATE
+		) VALUES(
+		    #{imgSeq}, #{goodsSeq}, #{imgName}, SYSDATE
+		)
+	]]>
+	</insert>
+
+	<!-- 상품목록 조회 -->
+	<select id="getGoodsList" parameterType="map" resultType="map">
+		SELECT
+		    A.GOODS_SEQ, 
+		    C.NAME,
+		    A.GOODS_NAME, 
+		    A.CONTENTS, 
+		    TO_CHAR(A.ENTER_DATE, 'YYYY.MM.DD') AS ENTER_DATE,
+		    B.IMG_SEQ,
+		    B.IMG_NAME,
+		    (SELECT COUNT(*) FROM T_GOODS_READ WHERE GOODS_SEQ = A.GOODS_SEQ) AS READ_CNT
+		FROM T_GOODS A
+		    LEFT JOIN T_GOODS_FILE B ON (A.GOODS_SEQ = B.GOODS_SEQ)
+		    INNER JOIN T_MEMBER C ON (A.EMAIL = C.EMAIL)
+		WHERE 1=1
+		  <if test='email != null and !email.equals("")'>
+		  AND A.EMAIL = #{email}
+		  </if>
+		  <if test='goodsName != null and !goodsName.equals("")'>
+		  AND A.GOODS_NAME LIKE '%'||#{goodsName}||'%'
+		  </if>
+		ORDER BY A.ENTER_DATE DESC
+	</select>
+	
+	<!-- 상품상세정보 조회 -->
+	<select id="getGoodsDetail" parameterType="int" resultType="map">
+	<![CDATA[
+		SELECT
+		    A.GOODS_SEQ,
+		    A.GOODS_NAME, 
+		    A.CONTENTS, 
+		    B.IMG_SEQ,
+		    B.IMG_NAME
+		FROM T_GOODS A
+		    LEFT JOIN T_GOODS_FILE B ON (A.GOODS_SEQ = B.GOODS_SEQ)
+		WHERE A.GOODS_SEQ = #{goodsSeq}
+	]]>
+	</select>
+
+	<!-- 상품조회 카운트 저장 -->
+	<insert id="addGoodsReadCount" parameterType="map">
+	<![CDATA[
+		MERGE INTO T_GOODS_READ TGT
+		USING (
+		    SELECT
+		        #{goodsSeq} AS GOODS_SEQ,
+		        #{email} AS EMAIL,
+		        SYSDATE AS ENTER_DATE
+		    FROM DUAL
+		) SRC ON (TGT.GOODS_SEQ = SRC.GOODS_SEQ AND TGT.EMAIL = SRC.EMAIL)
+		WHEN NOT MATCHED THEN
+		    INSERT(
+		        TGT.GOODS_SEQ, TGT.EMAIL, TGT.ENTER_DATE
+		    ) VALUES(
+		        SRC.GOODS_SEQ, SRC.EMAIL, SRC.ENTER_DATE
+		    )
+	]]>
+	</insert>
+
+	<!-- 상품댓글 목록 조회 -->
+	<select id="getGoodsComment" parameterType="int" resultType="map">
+	<![CDATA[
+		SELECT
+		    A.COMMENT_SEQ,
+		    A.GOODS_SEQ, 
+		    A.EMAIL, 
+		    A.CONTENTS,
+		    B.NAME,
+		    TO_CHAR(A.ENTER_DATE, 'YYYY.MM.DD') AS ENTER_DATE
+		FROM T_COMMENT A
+		    INNER JOIN T_MEMBER B ON (A.EMAIL = B.EMAIL)
+		WHERE A.GOODS_SEQ = #{goodsSeq}
+		ORDER BY A.ENTER_DATE DESC
+	]]>
+	</select>
+
+	<!-- 상품댓글 고유번호 조회 -->
+	<select id="getGoodsCommentSeq" resultType="int">
+	<![CDATA[
+		SELECT NVL(MAX(COMMENT_SEQ), 1) AS COMMENT_SEQ FROM T_COMMENT
+	]]>
+	</select>
+
+	<!-- 상품댓글 저장 -->
+	<insert id="addGoodsComment" parameterType="map">
+	<![CDATA[
+		INSERT INTO T_COMMENT(
+		    COMMENT_SEQ,
+		    GOODS_SEQ,
+		    EMAIL,
+		    CONTENTS,
+		    ENTER_DATE
+		) VALUES(
+		    #{commentSeq},
+		    #{goodsSeq},
+		    #{email},
+		    #{contents},
+		    SYSDATE
+		)
+	]]>
+	</insert>
+	
+	<!-- 상품댓글 수정 -->
+	<update id="updateGoodsComment" parameterType="map">
+	<![CDATA[
+		UPDATE T_COMMENT SET
+		    CONTENTS = #{contents}
+		WHERE COMMENT_SEQ = #{commentSeq}
+	]]>
+	</update>
+	
+	<!-- 상품댓글 삭제 -->
+	<delete id="deleteGoodsComment" parameterType="int">
+	<![CDATA[
+		DELETE FROM T_COMMENT WHERE COMMENT_SEQ = #{commentSeq}
+	]]>
+	</delete>
+
+</mapper>

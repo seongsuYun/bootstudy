@@ -3,7 +3,7 @@
 <body>
 	<h1>회원가입을 해주세요.</h1>
 	
-	<form action="/join" method="POST">
+	<form>
 		<p><label>이메일주소</label><input type="text" id="email" name="email" /></p>
 		<p>성명<input type="text" id="name" name="name" /></p>
 		<p>비밀번호<input type="password" id="password" name="password" /></p>
