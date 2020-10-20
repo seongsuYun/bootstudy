@@ -27,10 +27,10 @@ public class GoodsService {
 	@Transactional
 	public void addGoods(Map<String, Object> param) throws Exception {
 		int goodsSeq = mapper.getGoodsSeq();
-		int goodsFileSeq = mapper.getGoodsFileSeq();
+		int imgSeq = mapper.getGoodsFileSeq();
 		
 		param.put("goodsSeq", goodsSeq);
-		param.put("goodsFileSeq", goodsFileSeq);
+		param.put("imgSeq", imgSeq);
 		
 		mapper.addGoods(param);
 		mapper.addGoodsFile(param);
@@ -41,11 +41,15 @@ public class GoodsService {
 		
 		Map<String, Object> returnValue = new HashMap<String, Object>();
 		returnValue.put("goodsDetail", mapper.getGoodsDetail(goodsSeq));
-		returnValue.put("goodsComment", mapper.getGoodsComment(goodsSeq));
 		
 		mapper.addGoodsReadCount(param);
 		
 		return returnValue; 
+	}
+	
+	public List<Map<String, Object>> getGoodsCommentList(Map<String, Object> param) throws Exception {
+		int goodsSeq = Integer.valueOf((String)param.get("goodsSeq"));
+		return mapper.getGoodsComment(goodsSeq); 
 	}
 	
 	public void addGoodsComment(Map<String, Object> param) throws Exception {

@@ -7,7 +7,7 @@
 	<!-- 상품고유번호 조회 -->
 	<select id="getGoodsSeq" resultType="int">
 	<![CDATA[
-		SELECT NVL(MAX(GOODS_SEQ), 1) AS GOODS_SEQ FROM T_GOODS
+		SELECT NVL(MAX(GOODS_SEQ)+1, 1) AS GOODS_SEQ FROM T_GOODS
 	]]>
 	</select>
 
@@ -25,7 +25,7 @@
 	<!-- 상품이미지 고유번호 조회 -->
 	<select id="getGoodsFileSeq" resultType="int">
 	<![CDATA[
-		SELECT NVL(MAX(IMG_SEQ), 1) AS IMG_SEQ FROM T_GOODS_FILE
+		SELECT NVL(MAX(IMG_SEQ)+1, 1) AS IMG_SEQ FROM T_GOODS_FILE
 	]]>
 	</select>
 
@@ -119,7 +119,7 @@
 	<!-- 상품댓글 고유번호 조회 -->
 	<select id="getGoodsCommentSeq" resultType="int">
 	<![CDATA[
-		SELECT NVL(MAX(COMMENT_SEQ), 1) AS COMMENT_SEQ FROM T_COMMENT
+		SELECT NVL(MAX(COMMENT_SEQ)+1, 1) AS COMMENT_SEQ FROM T_COMMENT
 	]]>
 	</select>
 
