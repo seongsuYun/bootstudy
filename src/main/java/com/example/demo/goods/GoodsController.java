@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.example.demo.common.SessionUtil;
 import com.example.demo.member.vo.MemberVo;
 
 @Controller
@@ -32,24 +33,15 @@ public class GoodsController {
 	
 	@RequestMapping(value = "/goods/list", method = RequestMethod.GET)
 	public String list(Model model, @RequestParam Map<String, Object> param, HttpServletRequest request) throws Exception {
-		HttpSession session = request.getSession();
-		MemberVo memberVo = (MemberVo)session.getAttribute("USER_SESSION");
-		
-		param.put("email", memberVo.getEmail());
-		
 		model.addAttribute("list", service.getGoodsList(param));
 		return "goods/list";
 	}
 
 	@RequestMapping(value = "/goods/detail", method = RequestMethod.GET)
 	public String detail(Model model, HttpServletRequest request) throws Exception {
-		
-		HttpSession session = request.getSession();
-		MemberVo memberVo = (MemberVo)session.getAttribute("USER_SESSION");
-		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("goodsSeq", request.getParameter("goodsSeq"));
-		param.put("email", memberVo.getEmail());
+		param.put("email", SessionUtil.getUser().getEmail());
 		
 		model.addAllAttributes(service.getGoodsDetail(param));
 		
@@ -85,15 +77,13 @@ public class GoodsController {
 		param.put("imgName", imgName);
 		
 		service.addGoods(param);
-		return "redirect:/goods/detail";
+		return "redirect:/goods/list";
 	}
 	
 	@RequestMapping(value = "/goods/addGoodsComment", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> addGoodsComment(Model model, @RequestParam Map<String, Object> param, HttpServletRequest request) throws Exception {
-		HttpSession session = request.getSession();
-		MemberVo memberVo = (MemberVo)session.getAttribute("USER_SESSION");
-		param.put("email", memberVo.getEmail());
+		param.put("email", SessionUtil.getUser().getEmail());
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("resultCode", Boolean.TRUE);

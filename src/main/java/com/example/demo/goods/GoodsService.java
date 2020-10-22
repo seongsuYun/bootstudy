@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.common.SessionUtil;
 import com.example.demo.member.vo.MemberVo;
 
 @Service
@@ -21,6 +22,7 @@ public class GoodsService {
 	private GoodsMapper mapper; 
 
 	public List<Map<String, Object>> getGoodsList(Map<String, Object> param) throws Exception {
+		param.put("email", SessionUtil.getUser().getEmail());
 		return mapper.getGoodsList(param);
 	}
 	

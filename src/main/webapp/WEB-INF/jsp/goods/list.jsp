@@ -28,12 +28,14 @@
 		</tbody>
 	</table>
 	
-	<form id="">
-		<p><input type="text" id="keyword" name="keyword" /></p>
-		<input type="submit" value="검색" id="btnSearch" />
-	</form>
+	<div style="text-align:center; margin-top:30px;">
+		<form action="/goods/list" method="get">
+			<input type="text" name="goodsName" value="${param.goodsName}" />
+			<input type="submit" value="검색" />
+		</form>
+	</div>
 	
-	<div>
+	<div style="float:right;">
 		<button><a href="/goods/write">글 작성</a></button>
 	</div>
 	
