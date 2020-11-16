@@ -3,8 +3,8 @@
 
 #### Application Port설정
 server:
-  port: 8080
-  servlet:    context-path: /study
+  port: 9090
+  servlet:    context-path: /
 ---
 #### Spring Boot Default Error Page
 server:  error:    whitelabel:      enabled: false
@@ -23,7 +23,7 @@ spring:
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     #url: jdbc:oracle:thin:@localhost:1521:xe
     url: jdbc:log4jdbc:oracle:thin:@localhost:1521:xe
-    username: c##test_user1
+    username: test_user1
     password: 1234
     initialization-mode: always    hikari: 
       pool-name: hikari-cp

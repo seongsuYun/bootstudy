@@ -3,29 +3,41 @@
 <html>
 <body>
 
-	<table>
+	<table border="1px" width="100%">
 		<thead>
-			<th>번호</th>
-			<th>이미지</th>
-			<th>상품명</th>
-			<th>작성자</th>
-			<th>날짜</th>
-			<th>조회수</th>
+			<tr>
+				<th>번호</th>
+				<th>이미지</th>
+				<th>상품명</th>
+				<th>작성자</th>
+				<th>날짜</th>
+				<th>조회수</th>
+			</tr>
 		</thead>
 		<tbody>
-			<td>1</td>
-			<td>~~~~</td>
-			<td>아아</td>
-			<td>홍길동</td>
-			<td>2020.09.14</td>
-			<td>3</td>
+			<c:forEach var="item" items="${list}">
+			<tr>
+				<td>${item.GOODS_SEQ}</td>
+				<td><img style="width:30px; height:30px;" src="${pageContext.request.contextPath}/upload/${item.IMG_NAME}" /></td>
+				<td><a href="/goods/detail?goodsSeq=${item.GOODS_SEQ}">${item.GOODS_NAME}</a></td>
+				<td>${item.NAME}</td>
+				<td>${item.ENTER_DATE}</td>
+				<td>${item.READ_CNT}</td>
+			</tr>
+			</c:forEach>
 		</tbody>
 	</table>
 	
-	<form id="">
-		<p><input type="text" id="keyword" name="keyword" /></p>
-		<input type="submit" value="검색" id="btnSearch" />
-	</form>
+	<div style="text-align:center; margin-top:30px;">
+		<form action="/goods/list" method="get">
+			<input type="text" name="goodsName" value="${param.goodsName}" />
+			<input type="submit" value="검색" />
+		</form>
+	</div>
+	
+	<div style="float:right;">
+		<button><a href="/goods/write">글 작성</a></button>
+	</div>
 	
 </body>
 </html>
