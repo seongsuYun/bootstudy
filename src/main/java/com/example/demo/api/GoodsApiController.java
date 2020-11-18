@@ -1,5 +1,6 @@
-package com.example.api;
+package com.example.demo.api;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.goods.GoodsService;
 
-@RestController("/api/v1")
+@RestController
 public class GoodsApiController {
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
@@ -34,16 +35,17 @@ public class GoodsApiController {
 	 * @return
 	 * @throws Exception
 	 */
-	@GetMapping(value = "/goods")
-	public ResponseEntity<List<Map<String,Object>>> getGoods(@PathVariable String goodsSeq) throws Exception {
+	@GetMapping("/goods")
+	public ResponseEntity<List<Map<String,Object>>> getGoods() throws Exception {
 		return new ResponseEntity<List<Map<String,Object>>>(
-				goodsApiMapper.getGoodsList()
+				//goodsApiMapper.getGoodsList()
+				this.getDummyGoods()
 				, HttpStatus.OK
 		);
 	}
 	
 	/**
-	 * 상품조회 API
+	 * 상품상세정보 API
 	 * @param goodsSeq
 	 * @return
 	 * @throws Exception
@@ -67,9 +69,7 @@ public class GoodsApiController {
 	 */
 	@DeleteMapping(value = "/goods/{goodsSeq}")
 	public ResponseEntity<String> deleteGoods(@PathVariable String goodsSeq) throws Exception {
-		// 삭제 서비스는 상태(세션)가 필요한 영역이므로 부적합
-		// 필요시 PathVariable에 추가할수 있지만, 보안이 필요한.
-		
+		// 삭제API는 ForeignKey 관계로 인하여 적합하지 않음.
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
@@ -86,5 +86,25 @@ public class GoodsApiController {
 		log.error(e.getMessage());
 		
 		return new ResponseEntity<Map<String,Object>>(returnMap, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	private List<Map<String, Object>> getDummyGoods() {
+		List<Map<String, Object>> dummyList = new ArrayList<Map<String, Object>>();
+		
+		Map<String, Object> goods1 = new HashMap<String, Object>();
+		goods1.put("goodsSeq", "1111");
+		goods1.put("email", "icast4u@nate.com");
+		goods1.put("goodsName", "나이키운동화");
+		goods1.put("contents", "나이키운동화에 대한 설명");
+		dummyList.add(goods1);
+		
+		Map<String, Object> goods2 = new HashMap<String, Object>();
+		goods2.put("goodsSeq", "222");
+		goods2.put("email", "seongsu@nate.com");
+		goods2.put("goodsName", "아디다스운동화");
+		goods2.put("contents", "아디다스운동화에 대한 설명");
+		dummyList.add(goods2);
+		
+		return dummyList;
 	}
 }

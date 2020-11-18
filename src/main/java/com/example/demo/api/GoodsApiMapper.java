@@ -1,4 +1,4 @@
-package com.example.api;
+package com.example.demo.api;
 
 import java.sql.SQLException;
 import java.util.List;
