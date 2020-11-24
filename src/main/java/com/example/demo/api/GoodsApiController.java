@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.goods.GoodsService;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 public class GoodsApiController {
 	
@@ -28,13 +32,8 @@ public class GoodsApiController {
 	
 	@Autowired 
 	private GoodsApiMapper goodsApiMapper;
-	
-	/**
-	 * 특정사용자의 전체상품목록 API
-	 * @param goodsSeq
-	 * @return
-	 * @throws Exception
-	 */
+
+	@ApiOperation(value = "전체상품 목록조회")
 	@GetMapping("/goods")
 	public ResponseEntity<List<Map<String,Object>>> getGoods() throws Exception {
 		return new ResponseEntity<List<Map<String,Object>>>(
@@ -44,12 +43,10 @@ public class GoodsApiController {
 		);
 	}
 	
-	/**
-	 * 상품상세정보 API
-	 * @param goodsSeq
-	 * @return
-	 * @throws Exception
-	 */
+	@ApiOperation(value = "상품상세정보")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "goodsSeq", value = "상품고유번호", required = true, dataType = "int", paramType = "path"),
+    })
 	@GetMapping(value = "/goods/{goodsSeq}")
 	public ResponseEntity<Map<String,Object>> getGoodsDetail(@PathVariable String goodsSeq) throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -61,12 +58,10 @@ public class GoodsApiController {
 		);
 	}
 
-	/**
-	 * 상품삭제 API
-	 * @param goodsSeq
-	 * @return
-	 * @throws Exception
-	 */
+	@ApiOperation(value = "상품삭제")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "goodsSeq", value = "상품고유번호", required = true, dataType = "int", paramType = "path"),
+    })
 	@DeleteMapping(value = "/goods/{goodsSeq}")
 	public ResponseEntity<String> deleteGoods(@PathVariable String goodsSeq) throws Exception {
 		// 삭제API는 ForeignKey 관계로 인하여 적합하지 않음.

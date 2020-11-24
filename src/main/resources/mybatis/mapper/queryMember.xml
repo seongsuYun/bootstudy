@@ -22,6 +22,15 @@
 	]]>
 	</insert>
 	
+	<insert id="updateMember" parameterType="map">
+	<![CDATA[
+		UPDATE T_MEMBER SET
+			NAME = #{name},
+			PASSWORD = #{password}
+		WHERE EMAIL = #{email}
+	]]>
+	</insert>
+	
 	<select id="getMember" parameterType="map" resultType="com.example.demo.member.vo.MemberVo">
 	<![CDATA[
 		SELECT

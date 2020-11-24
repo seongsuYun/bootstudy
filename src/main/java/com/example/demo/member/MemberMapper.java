@@ -14,5 +14,7 @@ public interface MemberMapper {
 	
 	public int addMember(Map<String, Object> param) throws SQLException;
 	
+	public int updateMember(Map<String, Object> param) throws SQLException;
+	
 	public MemberVo getMember(Map<String, Object> param) throws SQLException;
 }
